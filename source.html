@@ -13,7 +13,7 @@
 <dl>
 
 <dt>Latest version
-<dd><a href="https://manakai.github.io/spec-numbers/">https://manakai.github.io/spec-datetime/</a>
+<dd><a href="https://manakai.github.io/spec-datetime/">https://manakai.github.io/spec-datetime/</a>
 
 <dt>Version history
 <dd><a href="https://github.com/manakai/spec-datetime/commits/gh-pages">https://github.com/manakai/spec-datetime/commits/gh-pages</a>
@@ -76,6 +76,15 @@ Standard</cite></a>.
 <section>
 <h1>Common definitions</h1>
 
+<p>The notation <code><var>era</var>.<var>prop</var></code>,
+where <var>era</var> is an era, represents that the value of the
+name/value pair whose name is <var>prop</var> of the era description
+(a JSON object contained as a value of the <code>eras</code> value of
+the topmost object) in
+<a href=https://github.com/manakai/data-locale/blob/master/data/calendar/era-defs.json>the
+era-defs data file</a>
+(<a href=https://github.com/manakai/data-locale/blob/master/doc/calendar-era-defs.txt>documentation</a>).
+
 <p>A string is a <dfn>YMD string</dfn> of a tuple
 (<var>year</var>, <var>month</var>, <var>day</var>) if it consists of
 the following components in the given order:
@@ -83,6 +92,30 @@ the following components in the given order:
   <ol>
 
   <li>A <span>year string</span> representing <var>year</var>
+ 
+  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  <li>Two <span>ASCII digits</span> representing <var>month</var> in
+  decimal
+
+  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  <li>Two <span>ASCII digits</span> representing <var>day</var> in
+  decimal
+
+  </ol>
+
+<p>A string is an <dfn>era YMD string</dfn> of a tuple
+(<var>year</var>, <var>month</var>, <var>day</var>) with
+era <var>era</var> if it consists of the following components in the
+given order:
+
+  <ol>
+
+  <li>An <span>era year string</span> representing <var>year</var>
+  in <var>era</var>
  
   <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
   character</code> (<code>-</code>)
@@ -122,8 +155,36 @@ the given order:
   </ol>
 
 <div class=note>
-<p>Note that the year just before year 1 is year 0, not year -1.
+<p>Note that the year just before year 1 is year 0, not year &minus;1.
 </div>
+
+<p>A string is an <dfn>era year string</dfn> representing a
+year <var>year</var> in era <var>era</var>, if it consists of the
+following components in the given order:
+
+  <ol>
+
+  <li><code><var>era</var>.key</code>
+
+  <li>If <var>era year</var> is less than zero (0):
+
+    <ol>
+
+    <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+    character</code> (<code>-</code>)
+    
+    <li>One or more <span>ASCII digits</span> representing
+    &minus;<var>era year</var> in decimal
+
+    </ol>
+
+  <li>Otherwise, one or more <span>ASCII digits</span>
+  representing <var>era year</var> in decimal
+
+  </ol>
+
+... where <var>era key</var> is and <var>era year</var>
+is <var>year</var> &minus; <code><var>era</var>.offset</code>.
 
 </section>
 
@@ -151,6 +212,12 @@ is a <span>YMD string</span> of the tuple
 string</a>.
 </div>
 
+<p>A string is a <dfn>Gregorian era date string</dfn> of
+a <span>Gregorian day</span>
+(<var>year</var>, <var>month</var>, <var>day</var>) with
+era <var>era</var> if it is an <span>era YMD string</span> of the tuple
+(<var>year</var>, <var>month</var>, <var>day</var>) in <var>era</var>.
+
 </section>
 
 <section>
@@ -169,6 +236,11 @@ integer in the range [1, 31].
 day</span> (<var>year</var>, <var>month</var>, <var>day</var>) if it
 is a <span>YMD string</span> of the tuple
 (<var>year</var>, <var>month</var>, <var>day</var>).
+
+<p>A string is a <dfn>Julian era date string</dfn> of a <span>Julian
+day</span> (<var>year</var>, <var>month</var>, <var>day</var>) with
+era <var>era</var> if it is an <span>era YMD string</span> of the tuple
+(<var>year</var>, <var>month</var>, <var>day</var>) in <var>era</var>.
 
 </section>
 
@@ -195,6 +267,35 @@ components in the given order:
   <ol>
 
   <li>A <span>year string</span> representing <var>year</var>
+ 
+  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  <li>Two <span>ASCII digits</span> representing <var>month</var> in
+  decimal
+
+  <li>If <var>is leap month</var> is <i>true</i>, a
+  <code>U+0027</code> <code class=charname>APOSTROPHE</code> character
+  (<code>'</code>)
+
+  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  <li>Two <span>ASCII digits</span> representing <var>day</var> in
+  decimal
+
+  </ol>
+
+<p>A string is a <dfn>kyuureki era date string</dfn> of
+a <span>kyuureki day</span>
+(<var>year</var>, <var>month</var>, <var>is leap
+month</var>, <var>day</var>) with era <var>era</var> if it consists of
+the following components in the given order:
+
+  <ol>
+
+  <li>An <span>era year string</span> representing <var>year</var>
+  in <var>era</var>
  
   <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
   character</code> (<code>-</code>)
