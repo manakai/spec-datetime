@@ -232,6 +232,14 @@ pre > code {
   padding: 0.2em 0.4em;
 }
 
+var {
+  font-style: italic;
+}
+
+.note var {
+  font-style: normal;
+}
+
 .charname {
   text-transform: lowercase;
   font-variant: small-caps;

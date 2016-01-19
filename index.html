@@ -1,0 +1,273 @@
+<!DOCTYPE html><html lang=en><head><meta charset=utf-8>
+<title>Dates and times</title>
+<link href=spec.css rel=stylesheet>
+
+</head><body><header>
+<hgroup>
+<h1 class="no-toc no-num">Dates and times</h1>
+<h2 class="no-toc no-num">The manakai project, 19 January 2016</h2>
+
+
+<dl>
+
+<dt>Latest version
+</dt><dd><a href=https://manakai.github.io/spec-numbers/>https://manakai.github.io/spec-datetime/</a>
+
+</dd><dt>Version history
+</dt><dd><a href=https://github.com/manakai/spec-datetime/commits/gh-pages>https://github.com/manakai/spec-datetime/commits/gh-pages</a>
+
+</dd></dl>
+
+</hgroup></header>
+
+<section id=abstract>
+<h1 class="no-toc no-num" id=abstract-0>Abstract</h1>
+
+<p>This document defines date and time formats and algorithms.
+
+</p></section>
+
+<section>
+<h1 class="no-toc no-num" id=table-of-contents>Table of contents</h1>
+
+
+<!--begin-toc-->
+<ol class=toc>
+ <li><a href=#terminology><span class=secno>1 </span>Terminology</a></li>
+ <li><a href=#common-definitions><span class=secno>2 </span>Common definitions</a></li>
+ <li><a href=#gregorian-calendar><span class=secno>3 </span>Gregorian calendar</a></li>
+ <li><a href=#julian-calendar><span class=secno>4 </span>Julian calendar</a></li>
+ <li><a href=#kyuureki><span class=secno>5 </span>Kyuureki</a></li>
+ <li><a href=#file-format><span class=secno>6 </span>File format</a></li>
+ <li><a class=no-num href=#data-files>Data files</a></li>
+ <li><a class=no-num href=#author>Author</a></li></ol>
+<!--end-toc-->
+</section>
+
+<section>
+<h1 id=terminology><span class=secno>1 </span>Terminology</h1>
+
+<p>All diagrams, examples, and notes in this specification are
+non-normative, as are all sections explicitly marked
+non-normative. Everything else in this specification is normative.
+
+</p><p>The key words “<em class=rfc2119>MUST</em>”<!--,
+“<em class=rfc2119>MUST NOT</em>”,
+“<em class=rfc2119>SHOULD</em>”, and “<em class=rfc2119>MAY</em>”
+--> in the normative parts of this document are to be interpreted as
+described in <a href=https://tools.ietf.org/html/rfc2119>RFC 2119</a>.
+
+</p><p>Requirements phrased in the imperative as part of algorithms (such
+as “strip any leading space characters” or “return false and abort
+these steps”) are to be interpreted with the meaning of the key word
+(e.g. “<em class=rfc2119>MUST</em>”) used in introducing the
+algorithm.
+
+</p><p>Conformance requirements phrased as algorithms or specific steps
+<em class=rfc2119>MAY</em> be implemented in any manner, so long as
+the end result is equivalent.  (In particular, the algorithms defined
+in this specification are intended to be easy to follow, and not
+intended to be performant.)
+
+</p><p>The term
+<a href=https://html.spec.whatwg.org/#ascii-digits><dfn id=ascii-digits>ASCII
+digits</dfn></a> is defined by the
+<a href=https://html.spec.whatwg.org/><cite>HTML Standard</cite></a>.
+
+</p><p>The term
+<a href=https://encoding.spec.whatwg.org/#utf-8><dfn id=utf-8>utf-8</dfn></a>
+is defined by the
+<a href=https://encoding.spec.whatwg.org/><cite>Encoding
+Standard</cite></a>.
+
+</p></section>
+
+<section>
+<h1 id=common-definitions><span class=secno>2 </span>Common definitions</h1>
+
+<p>A string is a <dfn id=ymd-string>YMD string</dfn> of a tuple
+(<var>year</var>, <var>month</var>, <var>day</var>) if it consists of
+the following components in the given order:
+
+  </p><ol>
+
+  <li>A <a href=#year-string>year string</a> representing <var>year</var>
+ 
+  </li><li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  </li><li>Two <a href=#ascii-digits>ASCII digits</a> representing <var>month</var> in
+  decimal
+
+  </li><li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  </li><li>Two <a href=#ascii-digits>ASCII digits</a> representing <var>day</var> in
+  decimal
+
+  </li></ol>
+
+<p>A string is a <dfn id=year-string>year string</dfn> representing a
+year <var>year</var>, if it consists of the following components in
+the given order:
+
+  </p><ol>
+
+  <li>If <var>year</var> is less than zero (0):
+
+    <ol>
+
+    <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+    character</code> (<code>-</code>)
+    
+    </li><li>Four or more <a href=#ascii-digits>ASCII digits</a> representing
+    −<var>year</var> in decimal
+
+    </li></ol>
+
+  </li><li>Otherwise, four or more <a href=#ascii-digits>ASCII digits</a>
+  representing <var>year</var> in decimal
+
+  </li></ol>
+
+<div class=note>
+<p>Note that the year just before year 1 is year 0, not year -1.
+</p></div>
+
+</section>
+
+<section>
+<h1 id=gregorian-calendar><span class=secno>3 </span>Gregorian calendar</h1>
+
+<p>A <dfn id=gregorian-day>Gregorian day</dfn> is identified by a tuple of a year
+number, a month number, and a day number.  The year number is an
+integer.  The month number is an integer in the range [1, 12].  The
+day number is an integer in the range [1, 31].
+
+</p><div class=note>
+<p>Not all months have the days 29, 30, and 31.
+</p></div>
+
+<p>A string is a <dfn id=gregorian-date-string>Gregorian date string</dfn> of a <a href=#gregorian-day>Gregorian
+day</a> (<var>year</var>, <var>month</var>, <var>day</var>) if it
+is a <a href=#ymd-string>YMD string</a> of the tuple
+(<var>year</var>, <var>month</var>, <var>day</var>).
+
+</p><div class=note>
+<p>If it represents a valid day and <var>year</var> is in the range
+[1, 9999], it is also a
+<a href=https://html.spec.whatwg.org/#valid-date-string>valid date
+string</a>.
+</p></div>
+
+</section>
+
+<section>
+<h1 id=julian-calendar><span class=secno>4 </span>Julian calendar</h1>
+
+<p>A <dfn id=julian-day>Julian day</dfn> is identified by a tuple of a year number,
+a month number, and a day number.  The year number is an integer.  The
+month number is an integer in the range [1, 12].  The day number is an
+integer in the range [1, 31].
+
+</p><div class=note>
+<p>Not all months have the days 29, 30, and 31.
+</p></div>
+
+<p>A string is a <dfn id=julian-date-string>Julian date string</dfn> of a <a href=#julian-day>Julian
+day</a> (<var>year</var>, <var>month</var>, <var>day</var>) if it
+is a <a href=#ymd-string>YMD string</a> of the tuple
+(<var>year</var>, <var>month</var>, <var>day</var>).
+
+</p></section>
+
+<section>
+<h1 id=kyuureki><span class=secno>5 </span>Kyuureki</h1>
+
+<p>A <dfn id=kyuureki-day>kyuureki day</dfn> is identified by a tuple of a year
+number, a month number, a boolean flag, and a day number.  The year
+number is an integer.  The month number is an integer in the range [1,
+12], where the value 1 represents the 正月.  If the boolean flag
+is <i>true</i>, the month is a leap month.  Otherwise, it is not a
+leap month.  The day number is an integer in the range [1, 30], where
+the value 1 represents the 朔日 of the month.
+
+</p><div class=note>
+<p>Not all months have the day 30.
+</p></div>
+
+<p>A string is a <dfn id=kyuureki-date-string>kyuureki date string</dfn> of a <a href=#kyuureki-day>kyuureki
+day</a> (<var>year</var>, <var>month</var>, <var>is leap
+month</var>, <var>day</var>) if it consists of the following
+components in the given order:
+
+  </p><ol>
+
+  <li>A <a href=#year-string>year string</a> representing <var>year</var>
+ 
+  </li><li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  </li><li>Two <a href=#ascii-digits>ASCII digits</a> representing <var>month</var> in
+  decimal
+
+  </li><li>If <var>is leap month</var> is <i>true</i>, a
+  <code>U+0027</code> <code class=charname>APOSTROPHE</code> character
+  (<code>'</code>)
+
+  </li><li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  </li><li>Two <a href=#ascii-digits>ASCII digits</a> representing <var>day</var> in
+  decimal
+
+  </li></ol>
+
+</section>
+
+<section>
+<h1 id=file-format><span class=secno>6 </span>File format</h1>
+
+<p>A <dfn id=date-mapping-file>date mapping file</dfn> is a file consist of zero of lines.
+A line consists of two slots separated by a <code>0x09</code> byte,
+followed by a <code>0x0A</code> byte.  A line represents an entry in
+the mapping, where the first slot represents the source of the entry
+and the second slot represents the destination of the entry.  The
+values in the slots are encoded by <a href=#utf-8>utf-8</a>.
+</p></section>
+
+<section>
+<h1 class=no-num id=data-files>Data files</h1>
+
+<p><i>This section is non-normative.</i>
+
+</p><p class=XXX>There are
+<a href=https://github.com/manakai/data-chars/blob/master/data/number-values.json>a
+JSON data file</a> on <span title=value>values</span> of characters
+defined in this document and
+<a href=https://github.com/manakai/data-chars/blob/master/data/tests/cjk-numbers.json>a
+JSON test data file</a> for the <span>parse a CJK number</span>
+algorithm
+(<a href=https://github.com/manakai/data-chars/blob/master/doc/number-values.txt>documentation</a>).
+
+</p><p class=XXX>There is an
+implementation: <a href=https://github.com/wakaba/perl-number-cjk>perl-number-cjk</a>.
+
+</p></section>
+
+<section>
+<h1 class=no-num id=author>Author</h1>
+
+<p>This document is written
+by <a href=http://suika.suikawiki.org/~wakaba/who?>Wakaba</a>
+&lt;wakaba@suikawiki.org&gt;.
+
+</p><p>This document is developed as part of
+<a href=https://manakai.github.io/>the manakai project</a>.
+
+</p><p>Per <a href=https://creativecommons.org/publicdomain/zero/1.0/>CC0</a>,
+to the extent possible under law, the author has waived all copyright
+and related or neighboring rights to this work.
+
+</p></section>
+</body></html>

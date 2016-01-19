@@ -1,22 +1,22 @@
 <!DOCTYPE HTML>
 <html lang=en>
 <meta charset=utf-8>
-<title>Numbers</title>
+<title>Dates and times</title>
 <link rel=stylesheet href=spec.css>
 
 <header>
 <hgroup>
-<h1 class="no-toc no-num">Numbers</h1>
+<h1 class="no-toc no-num">Dates and times</h1>
 <h2 class="no-toc no-num">The manakai project, [DATE]</h2>
 </hfroup>
 
 <dl>
 
 <dt>Latest version
-<dd><a href="https://manakai.github.io/spec-numbers/">https://manakai.github.io/spec-numbers/</a>
+<dd><a href="https://manakai.github.io/spec-numbers/">https://manakai.github.io/spec-datetime/</a>
 
 <dt>Version history
-<dd><a href="https://github.com/manakai/spec-numbers/commits/gh-pages">https://github.com/manakai/spec-numbers/commits/gh-pages</a>
+<dd><a href="https://github.com/manakai/spec-datetime/commits/gh-pages">https://github.com/manakai/spec-datetime/commits/gh-pages</a>
 
 </dl>
 
@@ -25,8 +25,7 @@
 <section id=abstract>
 <h1 class="no-toc no-num">Abstract</h1>
 
-<p>This document defines a CJK number (<span lang=ja>漢数字</span>)
-parsing algorithm.
+<p>This document defines date and time formats and algorithms.
 
 </section>
 
@@ -61,294 +60,171 @@ the end result is equivalent.  (In particular, the algorithms defined
 in this specification are intended to be easy to follow, and not
 intended to be performant.)
 
+<p>The term
+<a href=https://html.spec.whatwg.org/#ascii-digits><dfn>ASCII
+digits</dfn></a> is defined by the
+<a href=https://html.spec.whatwg.org/><cite>HTML Standard</cite></a>.
+
+<p>The term
+<a href=https://encoding.spec.whatwg.org/#utf-8><dfn>utf-8</dfn></a>
+is defined by the
+<a href=https://encoding.spec.whatwg.org/><cite>Encoding
+Standard</cite></a>.
+
 </section>
 
 <section>
-<h1>CJK numbers</h1>
+<h1>Common definitions</h1>
 
-<p>This section defines an algorithm to parse CJK numbers
-(<span lang=ja>漢数字</span>).
+<p>A string is a <dfn>YMD string</dfn> of a tuple
+(<var>year</var>, <var>month</var>, <var>day</var>) if it consists of
+the following components in the given order:
 
-<section>
-<h1>Digits</h1>
+  <ol>
 
-<p>Digits used in CJK numbers are defined by the following table.
-Each character in the table has its <dfn>value</dfn> shown in
-the <i>value</i> column of the same row and belongs to the category
-shown in the <i>category</i> column of the same row.
+  <li>A <span>year string</span> representing <var>year</var>
+ 
+  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  <li>Two <span>ASCII digits</span> representing <var>month</var> in
+  decimal
+
+  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  <li>Two <span>ASCII digits</span> representing <var>day</var> in
+  decimal
+
+  </ol>
+
+<p>A string is a <dfn>year string</dfn> representing a
+year <var>year</var>, if it consists of the following components in
+the given order:
+
+  <ol>
+
+  <li>If <var>year</var> is less than zero (0):
+
+    <ol>
+
+    <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+    character</code> (<code>-</code>)
+    
+    <li>Four or more <span>ASCII digits</span> representing
+    &minus;<var>year</var> in decimal
+
+    </ol>
+
+  <li>Otherwise, four or more <span>ASCII digits</span>
+  representing <var>year</var> in decimal
+
+  </ol>
 
 <div class=note>
-  <p>The <span>value</span> of a character is a non-negative integer.
+<p>Note that the year just before year 1 is year 0, not year -1.
 </div>
-
-<p>There are following categories: <dfn>CJK digit</dfn>,
-<dfn>CJK ten</dfn>, <dfn>CJK multiple tens</dfn>,
-<dfn>CJK hundred</dfn>, <dfn>CJK thousand</dfn>,
-<dfn>CJK ten thousand</dfn>, <dfn>CJK hundred million</dfn>,
-<dfn>CJK trillion</dfn>, and <dfn>CJK ten quadrillion</dfn>.
-
-<table>
-  <thead>
-    <tr>
-      <th colspan=3>Character
-      <th rowspan=2>Value
-      <th rowspan=2>Category
-    <tr>
-      <th>Code point
-      <th>Name
-      <th>Character
-  <tbody>
-    <!--CHARS-->
-</table>
 
 </section>
 
 <section>
-<h1>Parsing CJK numbers</h1>
-
-<p>To <dfn>parse a CJK number</dfn> <var>string</var>, the
-implementation <em class=rfc2119>MUST</em> run the following steps:
-
-<ol class=steps>
-
-<li>Let <var>input</var> be a copy of <var>string</var>.
-
-<li>If <var>input</var> is the empty string, return null and abort
-these steps.
-
-<li>Set <var>value</var> to the result of applying the <span>rules for
-parsing a large CJK number</span>.
-
-<li>If <var>input</var> is not the empty string, return null and abort
-these steps.
-
-<li>Return <var>value</var><!-- which can be null -->.
-
-</ol>
-
-<p>These steps returns either a number or null.  The null value
-represents an error.
-
-
-<p>The <dfn>rules for parsing a large CJK number</dfn> are as given in
-the following steps, which share the same <var>input</var> with the
-steps that invoke these steps:
-
-<ol class=steps>
-
-<li>Let <var>value</var> be zero.
-
-
-<li>If <var>input</var> starts with five or more <span title="CJK
-digit">CJK digits</span>, remove them from <var>input</var> and run
-these substeps:
-
-  <ol>
-
-  <li>Let <var>digits</var> be those characters.
-
-  <li>Replace each character in <var>digits</var> by
-  the <a href="https://html.spec.whatwg.org/#ascii-digits">ASCII
-  digit</a> representing its <span>value</span>.
-
-  <li>Set <var>v</var> to the value obtained by
-  interpreting <var>digits</var> as a decimal number.
-
-  </ol>
-
-<li>Otherwise, let <var>v</var> be the result of applying
-the <span>rules for parsing a small CJK number</span>.
-
-<li>If <var>v</var> is null, return null and abort these steps.
-
-
-<li>If <var>input</var> starts with a <span>CJK ten
-quadrillion</span>, remove it from <var>input</var> and run these
-substeps:
-
-  <ol>
-
-  <li>Let <var>m</var> be the <span>value</span> of the removed
-  character.
-
-  <li>Add <var>v</var> &#xd7; <var>m</var> to <var>value</var>.
-
-  <li>Set <var>v</var> to the result of applying the <span>rules for
-  parsing a small CJK number</span>.
-
-  <li>If <var>v</var> is null, return <var>value</var>.
-
-  </ol>
-
-
-<li>If <var>input</var> starts with a <span>CJK trillion</span>,
-remove it from <var>input</var> and run these substeps:
-
-  <ol>
-
-  <li>Let <var>m</var> be the <span>value</span> of the removed
-  character.
-
-  <li>Add <var>v</var> &#xd7; <var>m</var> to <var>value</var>.
-
-  <li>Set <var>v</var> to the result of applying the <span>rules for
-  parsing a small CJK number</span>.
-
-  <li>If <var>v</var> is null, return <var>value</var>.
-
-  </ol>
-
-
-<li>If <var>input</var> starts with a <span>CJK hundred
-million</span>, remove it from <var>input</var> and run these
-substeps:
-
-  <ol>
-
-  <li>Let <var>m</var> be the <span>value</span> of the removed
-  character.
-
-  <li>Add <var>v</var> &#xd7; <var>m</var> to <var>value</var>.
-
-  <li>Set <var>v</var> to the result of applying the <span>rules for
-  parsing a small CJK number</span>.
-
-  <li>If <var>v</var> is null, return <var>value</var>.
-
-  </ol>
-
-
-<li>If <var>input</var> starts with a <span>CJK ten thousand</span>,
-remove it from <var>input</var> and run these substeps:
-
-  <ol>
-
-  <li>Let <var>m</var> be the <span>value</span> of the removed
-  character.
-
-  <li>Add <var>v</var> &#xd7; <var>m</var> to <var>value</var>.
-
-  <li>Set <var>v</var> to the result of applying the <span>rules for
-  parsing a small CJK number</span>.
-
-  <li>If <var>v</var> is null, return <var>value</var>.
-
-  </ol>
-
-
-<li>Add <var>v</var> to <var>value</var>.
-
-<li>Return <var>value</var>.
-
-</ol>
-
-<p>The <dfn>rules for parsing a small CJK number</dfn> are as given in
-the following steps, which share the same <var>input</var> with the
-steps that invoke these steps:
-
-<ol class=steps>
-
-<li>If <var>input</var> starts with two, three, or
-four <span title="CJK digit">CJK digits</span>, remove them
-from <var>input</var> and run these substeps:
-
-  <ol>
-
-  <li>Let <var>digits</var> be those characters.
-
-  <li>Replace each character in <var>digits</var> by
-  the <a href="https://html.spec.whatwg.org/#ascii-digits">ASCII
-  digit</a> representing its <span>value</span>.
-
-  <li>Return the value obtained by interpreting <var>digits</var> as a
-  decimal number and abort the entire steps.
-
-  </ol>
-
-<li>Let <var>value</var> be zero.
-
-
-<li>If <var>input</var> starts with a <span>CJK digit</span> followed
-by a <span>CJK thousand</span>, remove them from <var>input</var> and
-run these substeps:
-
-  <ol>
-
-  <li>Let <var>n</var> be the <span>value</span> of the <span>CJK
-  digit</span>.
-
-  <li>Let <var>m</var> be the <span>value</span> of the <span>CJK
-  thousand</span>.
-
-  <li>Add <var>n</var> &#xd7; <var>m</var> to <var>value</var>.
-
-  </ol>
-
-<li>Otherwise, if <var>input</var> starts with a <span>CJK
-thousand</span>, remove it from <var>input</var> and add
-the <span>value</span> of it to <var>value</var>.
-
-
-<li>If <var>input</var> starts with a <span>CJK digit</span> followed
-by a <span>CJK hundred</span>, remove them from <var>input</var> and
-run these substeps:
-
-  <ol>
-
-  <li>Let <var>n</var> be the <span>value</span> of the <span>CJK
-  digit</span>.
-
-  <li>Let <var>m</var> be the <span>value</span> of the <span>CJK
-  hundred</span>.
-
-  <li>Add <var>n</var> &#xd7; <var>m</var> to <var>value</var>.
-
-  </ol>
-
-<li>Otherwise, if <var>input</var> starts with a <span>CJK
-hundred</span>, remove it from <var>input</var> and add
-the <span>value</span> of it to <var>value</var>.
-
-
-<li>If <var>input</var> starts with a <span>CJK digit</span> followed
-by a <span>CJK ten</span>, remove them from <var>input</var> and run
-these substeps:
-
-  <ol>
-
-  <li>Let <var>n</var> be the <span>value</span> of the <span>CJK
-  digit</span>.
-
-  <li>Let <var>m</var> be the <span>value</span> of the <span>CJK
-  ten</span>.
-
-  <li>Add <var>n</var> &#xd7; <var>m</var> to <var>value</var>.
-
-  </ol>
-
-<li>Otherwise, if <var>input</var> starts with a <span>CJK ten</span>,
-remove it from <var>input</var> and add the <span>value</span> of it
-to <var>value</var>.
-
-<li>Otherwise, if <var>input</var> starts with a <span>CJK multiple
-tens</span>, remove it from <var>input</var> and add
-the <span>value</span> of it to <var>value</var>.
-
-
-<li>If <var>input</var> starts with a <span>CJK digit</span>, remove
-it from <var>input</var> and add the <span>value</span> of it
-to <var>value</var>.
-
-
-<li>If no character is removed by these steps, return null and abort
-these steps.
-
-<li>Return <var>value</var>.
-
-</ol>
+<h1>Gregorian calendar</h1>
+
+<p>A <dfn>Gregorian day</dfn> is identified by a tuple of a year
+number, a month number, and a day number.  The year number is an
+integer.  The month number is an integer in the range [1, 12].  The
+day number is an integer in the range [1, 31].
+
+<div class=note>
+<p>Not all months have the days 29, 30, and 31.
+</div>
+
+<p>A string is a <dfn>Gregorian date string</dfn> of a <span>Gregorian
+day</span> (<var>year</var>, <var>month</var>, <var>day</var>) if it
+is a <span>YMD string</span> of the tuple
+(<var>year</var>, <var>month</var>, <var>day</var>).
+
+<div class=note>
+<p>If it represents a valid day and <var>year</var> is in the range
+[1, 9999], it is also a
+<a href=https://html.spec.whatwg.org/#valid-date-string>valid date
+string</a>.
+</div>
 
 </section>
 
+<section>
+<h1>Julian calendar</h1>
+
+<p>A <dfn>Julian day</dfn> is identified by a tuple of a year number,
+a month number, and a day number.  The year number is an integer.  The
+month number is an integer in the range [1, 12].  The day number is an
+integer in the range [1, 31].
+
+<div class=note>
+<p>Not all months have the days 29, 30, and 31.
+</div>
+
+<p>A string is a <dfn>Julian date string</dfn> of a <span>Julian
+day</span> (<var>year</var>, <var>month</var>, <var>day</var>) if it
+is a <span>YMD string</span> of the tuple
+(<var>year</var>, <var>month</var>, <var>day</var>).
+
+</section>
+
+<section>
+<h1>Kyuureki</h1>
+
+<p>A <dfn>kyuureki day</dfn> is identified by a tuple of a year
+number, a month number, a boolean flag, and a day number.  The year
+number is an integer.  The month number is an integer in the range [1,
+12], where the value 1 represents the 正月.  If the boolean flag
+is <i>true</i>, the month is a leap month.  Otherwise, it is not a
+leap month.  The day number is an integer in the range [1, 30], where
+the value 1 represents the 朔日 of the month.
+
+<div class=note>
+<p>Not all months have the day 30.
+</div>
+
+<p>A string is a <dfn>kyuureki date string</dfn> of a <span>kyuureki
+day</span> (<var>year</var>, <var>month</var>, <var>is leap
+month</var>, <var>day</var>) if it consists of the following
+components in the given order:
+
+  <ol>
+
+  <li>A <span>year string</span> representing <var>year</var>
+ 
+  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  <li>Two <span>ASCII digits</span> representing <var>month</var> in
+  decimal
+
+  <li>If <var>is leap month</var> is <i>true</i>, a
+  <code>U+0027</code> <code class=charname>APOSTROPHE</code> character
+  (<code>'</code>)
+
+  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  <li>Two <span>ASCII digits</span> representing <var>day</var> in
+  decimal
+
+  </ol>
+
+</section>
+
+<section>
+<h1>File format</h1>
+
+<p>A <dfn>date mapping file</dfn> is a file consist of zero of lines.
+A line consists of two slots separated by a <code>0x09</code> byte,
+followed by a <code>0x0A</code> byte.  A line represents an entry in
+the mapping, where the first slot represents the source of the entry
+and the second slot represents the destination of the entry.  The
+values in the slots are encoded by <span>utf-8</span>.
 </section>
 
 <section>
@@ -356,7 +232,7 @@ these steps.
 
 <p><i>This section is non-normative.</i>
 
-<p>There are
+<p class=XXX>There are
 <a href=https://github.com/manakai/data-chars/blob/master/data/number-values.json>a
 JSON data file</a> on <span title=value>values</span> of characters
 defined in this document and
@@ -365,7 +241,7 @@ JSON test data file</a> for the <span>parse a CJK number</span>
 algorithm
 (<a href="https://github.com/manakai/data-chars/blob/master/doc/number-values.txt">documentation</a>).
 
-<p>There is an
+<p class=XXX>There is an
 implementation: <a href="https://github.com/wakaba/perl-number-cjk">perl-number-cjk</a>.
 
 </section>
