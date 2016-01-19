@@ -74,16 +74,47 @@ Standard</cite></a>.
 </section>
 
 <section>
-<h1>Common definitions</h1>
+<h1>Numbers of days</h1>
 
-<p>The notation <code><var>era</var>.<var>prop</var></code>,
-where <var>era</var> is an era, represents that the value of the
-name/value pair whose name is <var>prop</var> of the era description
-(a JSON object contained as a value of the <code>eras</code> value of
-the topmost object) in
-<a href=https://github.com/manakai/data-locale/blob/master/data/calendar/era-defs.json>the
-era-defs data file</a>
-(<a href=https://github.com/manakai/data-locale/blob/master/doc/calendar-era-defs.txt>documentation</a>).
+<p>The <dfn>JD day number</dfn> of a day is a <span>Julian Day</span>
+number representing the start of the day in UTC.
+
+</section>
+
+<section>
+<h1>Eras</h1>
+
+<section>
+<h1>AD</h1>
+
+<p>An <dfn>AD year</dfn> is an integer.
+
+<div class=note>
+<p>Note that the year just before year 1 is year 0, not year &minus;1.
+</div>
+
+<p>A string is a <dfn>year string</dfn> representing an
+<span>AD year</span> <var>year</var>, if it consists of the following
+components in the given order:
+
+  <ol>
+
+  <li>If <var>year</var> is less than zero (0):
+
+    <ol>
+
+    <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+    character</code> (<code>-</code>)
+    
+    <li>Four or more <span>ASCII digits</span> representing
+    &minus;<var>year</var> in decimal
+
+    </ol>
+
+  <li>Otherwise, four or more <span>ASCII digits</span>
+  representing <var>year</var> in decimal
+
+  </ol>
 
 <p>A string is a <dfn>YMD string</dfn> of a tuple
 (<var>year</var>, <var>month</var>, <var>day</var>) if it consists of
@@ -107,56 +138,31 @@ the following components in the given order:
 
   </ol>
 
-<p>A string is an <dfn>era YMD string</dfn> of a tuple
-(<var>year</var>, <var>month</var>, <var>day</var>) with
-era <var>era</var> if it consists of the following components in the
-given order:
+</section>
 
-  <ol>
+<section>
+<h1>Eras</h1>
 
-  <li>An <span>era year string</span> representing <var>year</var>
-  in <var>era</var>
- 
-  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
-  character</code> (<code>-</code>)
+<p>The notation <code><var>era</var>.<var>prop</var></code>,
+where <var>era</var> is an era, represents that the value of the
+name/value pair whose name is <var>prop</var> of the era description
+(a JSON object contained as a value of the <code>eras</code> value of
+the topmost object) in
+<a href=https://github.com/manakai/data-locale/blob/master/data/calendar/era-defs.json>the
+era-defs data file</a>
+(<a href=https://github.com/manakai/data-locale/blob/master/doc/calendar-era-defs.txt>documentation</a>).
 
-  <li>Two <span>ASCII digits</span> representing <var>month</var> in
-  decimal
+<p>To <dfn title="convert from era and year">convert from
+era <var>era</var> and year <var>era year</var></dfn> into an <span>AD
+year</span>, the implementation
+<em class=rfc2119>MUST</em> return <code><var>era</var>.offset</code>
++ <var>era year</var>.
 
-  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
-  character</code> (<code>-</code>)
-
-  <li>Two <span>ASCII digits</span> representing <var>day</var> in
-  decimal
-
-  </ol>
-
-<p>A string is a <dfn>year string</dfn> representing a
-year <var>year</var>, if it consists of the following components in
-the given order:
-
-  <ol>
-
-  <li>If <var>year</var> is less than zero (0):
-
-    <ol>
-
-    <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
-    character</code> (<code>-</code>)
-    
-    <li>Four or more <span>ASCII digits</span> representing
-    &minus;<var>year</var> in decimal
-
-    </ol>
-
-  <li>Otherwise, four or more <span>ASCII digits</span>
-  representing <var>year</var> in decimal
-
-  </ol>
-
-<div class=note>
-<p>Note that the year just before year 1 is year 0, not year &minus;1.
-</div>
+<p>To <dfn title="convert a year for era">convert</dfn> an <span>AD
+year</span> <var>year</var> for era <var>era</var> into a
+year <var>era year</var> in <var>era</var>, the implementation
+<em class=rfc2119>MUST</em> return <var>year</var>
+&minus; <code><var>era</var>.offset</code>.
 
 <p>A string is an <dfn>era year string</dfn> representing a
 year <var>year</var> in era <var>era</var>, if it consists of the
@@ -184,25 +190,130 @@ following components in the given order:
   </ol>
 
 ... where <var>era key</var> is and <var>era year</var>
-is <var>year</var> &minus; <code><var>era</var>.offset</code>.
+is <var>year</var> <span title="convert a year for
+era">converted</span> for <var>era</var>.
+
+<p>A string is an <dfn>era YMD string</dfn> of a tuple
+(<var>year</var>, <var>month</var>, <var>day</var>) with
+era <var>era</var> if it consists of the following components in the
+given order:
+
+  <ol>
+
+  <li>An <span>era year string</span> representing <var>year</var>
+  in <var>era</var>
+ 
+  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  <li>Two <span>ASCII digits</span> representing <var>month</var> in
+  decimal
+
+  <li>A <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>)
+
+  <li>Two <span>ASCII digits</span> representing <var>day</var> in
+  decimal
+
+  </ol>
 
 </section>
 
 <section>
+<h1>Era systems</h1>
+
+<p>An <dfn>era system</dfn> is a set of rules to choose
+an <span>era</span> which is appropriate for a day.
+
+<p>An <span>era system</span> has an ordered sequence of time points.
+A time point is a tuple of type, value, and <span>era</span>.  The
+type is one of <i>Julian Day</i> and <i>year</i>.  If the type
+is <i>Julian Day</i>, the value is the <span>JD day number</span> of a
+day.  If the type is <i>year</i>, the value is an <span>AD
+year</span>.
+
+<p>To <dfn>get the era and era year</dfn> of a <span>calendar
+day</span> <var>day</var> using an <span>era
+system</span> <var>eras</var>, the
+implementation <em class=rfc2119>MUST</em> run these steps:
+
+  <ol class=steps>
+
+  <li>Let <var>jd</var> be the <span>JD day number</span>
+  of <var>day</var>.
+
+  <li>Let <var>year</var> be the <span>AD year</span> of 
+  <var>day</var>.
+
+  <li>Let <var>era</var> be null.
+
+  <li>Let <var>i</var> be zero (0).
+
+  <li><i>Loop</i>: If <var>i</var> is equal to the number of time
+  points in <var>eras</var>, go to the step labeled as <i>Era
+  found</i>.
+
+  <li>Set <var>point</var> to the <var>i</var><sup>th</sup> time point
+  in <var>eras</var> (zero-indexed).
+
+  <li>If the type of <var>point</var> is <i>Julian Day</i>
+  and <var>jd</var> is greater than or equal to the value
+  of <var>point</var>, set <var>era</var> to the era
+  of <var>point</var> and go to the step labeled as <i>Era found</i>.
+
+  <li>Otherwise, if the type of <var>point</var> is <i>year</i>
+  and <var>year</var> is greater than or equal to the value
+  of <var>point</var>, set <var>era</var> to the era
+  of <var>point</var> and go to the step labeled as <i>Era found</i>.
+
+  <li>Otherwise, increment <var>i</var> and go to the step labeled
+  as <i>Loop</i>.
+
+  <li><i>Era found</i>: If <var>era</var> is null, return nothing and
+  abort these steps.
+
+  <li>Let <var>era year</var> be <var>year</var> <span title="convert
+  a year for era">converted</span> for <var>era</var>.
+
+  <li>Return a tuple of era <var>era</var> and year <var>era
+  year</var>.
+
+  </ol>
+
+<div class=note>
+<p>These steps return a pair of an <span>era</span> and a year in
+the <span>era</span>, which can be used to represent <var>day</var>.
+If no <span>era</span> is defined by
+<var>eras</var> for <var>day</var>, it returns nothing.
+</div>
+
+</section>
+
+</section>
+
+<section>
+<h1>Calendars</h1>
+
+<p>For the purpose of this specification, a <dfn>calendar day</dfn> is
+a <span>Gregorian calendar day</span>, <span>Julian calendar
+day</span>, or <span>kyuureki day</span>.
+
+<section>
 <h1>Gregorian calendar</h1>
 
-<p>A <dfn>Gregorian day</dfn> is identified by a tuple of a year
-number, a month number, and a day number.  The year number is an
-integer.  The month number is an integer in the range [1, 12].  The
-day number is an integer in the range [1, 31].
+<p>A <dfn>Gregorian calendar day</dfn> is identified by a tuple of
+an <span>AD year</span>, a month number, and a day number.  The year
+number is an integer.  The month number is an integer in the range [1,
+12].  The day number is an integer in the range [1, 31].
 
 <div class=note>
 <p>Not all months have the days 29, 30, and 31.
 </div>
 
 <p>A string is a <dfn>Gregorian date string</dfn> of a <span>Gregorian
-day</span> (<var>year</var>, <var>month</var>, <var>day</var>) if it
-is a <span>YMD string</span> of the tuple
+calendar day</span>
+(<var>year</var>, <var>month</var>, <var>day</var>) if it is
+a <span>YMD string</span> of the tuple
 (<var>year</var>, <var>month</var>, <var>day</var>).
 
 <div class=note>
@@ -213,47 +324,56 @@ string</a>.
 </div>
 
 <p>A string is a <dfn>Gregorian era date string</dfn> of
-a <span>Gregorian day</span>
+a <span>Gregorian calendar day</span>
 (<var>year</var>, <var>month</var>, <var>day</var>) with
-era <var>era</var> if it is an <span>era YMD string</span> of the tuple
-(<var>year</var>, <var>month</var>, <var>day</var>) in <var>era</var>.
+era <var>era</var> if it is an <span>era YMD string</span> of the
+tuple (<var>year</var>, <var>month</var>, <var>day</var>)
+in <var>era</var>.
 
 </section>
 
 <section>
 <h1>Julian calendar</h1>
 
-<p>A <dfn>Julian day</dfn> is identified by a tuple of a year number,
-a month number, and a day number.  The year number is an integer.  The
-month number is an integer in the range [1, 12].  The day number is an
-integer in the range [1, 31].
+<p>A <dfn>Julian calendar day</dfn> is identified by a tuple of
+an <span>AD year</span>, a month number, and a day number.  The year
+number is an integer.  The month number is an integer in the range [1,
+12].  The day number is an integer in the range [1, 31].
 
 <div class=note>
 <p>Not all months have the days 29, 30, and 31.
 </div>
 
+<div class=note>
+<p><span>Julian calendar day</span> is different from <span>Julian
+Day</span>.
+</div>
+
 <p>A string is a <dfn>Julian date string</dfn> of a <span>Julian
-day</span> (<var>year</var>, <var>month</var>, <var>day</var>) if it
-is a <span>YMD string</span> of the tuple
+calendar day</span>
+(<var>year</var>, <var>month</var>, <var>day</var>) if it is
+a <span>YMD string</span> of the tuple
 (<var>year</var>, <var>month</var>, <var>day</var>).
 
 <p>A string is a <dfn>Julian era date string</dfn> of a <span>Julian
-day</span> (<var>year</var>, <var>month</var>, <var>day</var>) with
-era <var>era</var> if it is an <span>era YMD string</span> of the tuple
-(<var>year</var>, <var>month</var>, <var>day</var>) in <var>era</var>.
+calendar day</span>
+(<var>year</var>, <var>month</var>, <var>day</var>) with
+era <var>era</var> if it is an <span>era YMD string</span> of the
+tuple (<var>year</var>, <var>month</var>, <var>day</var>)
+in <var>era</var>.
 
 </section>
 
 <section>
 <h1>Kyuureki</h1>
 
-<p>A <dfn>kyuureki day</dfn> is identified by a tuple of a year
-number, a month number, a boolean flag, and a day number.  The year
-number is an integer.  The month number is an integer in the range [1,
-12], where the value 1 represents the 正月.  If the boolean flag
-is <i>true</i>, the month is a leap month.  Otherwise, it is not a
-leap month.  The day number is an integer in the range [1, 30], where
-the value 1 represents the 朔日 of the month.
+<p>A <dfn>kyuureki day</dfn> is identified by a tuple of an <span>AD
+year</span>, a month number, a boolean flag, and a day number.  The
+year number is an integer.  The month number is an integer in the
+range [1, 12], where the value 1 represents the 正月.  If the boolean
+flag is <i>true</i>, the month is a leap month.  Otherwise, it is not
+a leap month.  The day number is an integer in the range [1, 30],
+where the value 1 represents the 朔日 of the month.
 
 <div class=note>
 <p>Not all months have the day 30.
@@ -314,6 +434,8 @@ the following components in the given order:
   decimal
 
   </ol>
+
+</section>
 
 </section>
 
