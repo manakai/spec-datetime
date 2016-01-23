@@ -155,14 +155,40 @@ era-defs data file</a>
 <p>To <dfn title="convert from era and year">convert from
 era <var>era</var> and year <var>era year</var></dfn> into an <span>AD
 year</span>, the implementation
-<em class=rfc2119>MUST</em> return <code><var>era</var>.offset</code>
-+ <var>era year</var>.
+<em class=rfc2119>MUST</em> run these steps:
+
+  <ol class=steps>
+
+  <li>If <code><var>era</var>.offset</code> is null, return null.
+
+  <li>Otherwise, return <code><var>era</var>.offset</code> + <var>era
+  year</var>.
+
+  </ol>
+
+  <div class=note>
+  <p>If the mapping from <var>era</var> to AD is not known, these
+  steps return null.
+  </div>
 
 <p>To <dfn title="convert a year for era">convert</dfn> an <span>AD
 year</span> <var>year</var> for era <var>era</var> into a
 year <var>era year</var> in <var>era</var>, the implementation
-<em class=rfc2119>MUST</em> return <var>year</var>
-&minus; <code><var>era</var>.offset</code>.
+<em class=rfc2119>MUST</em> run these steps:
+
+  <ol class=steps>
+
+  <li>If <code><var>era</var>.offset</code> is null, return null.
+
+  <li>Otherwise, return <var>year</var>
+  &minus; <code><var>era</var>.offset</code>.
+
+  </ol>
+
+  <div class=note>
+  <p>If the mapping from AD to <var>era</var> is not known, these
+  steps return null.
+  </div>
 
 <p>A string is an <dfn>era year string</dfn> representing a
 year <var>year</var> in era <var>era</var>, if it consists of the
@@ -274,6 +300,9 @@ implementation <em class=rfc2119>MUST</em> run these steps:
 
   <li>Let <var>era year</var> be <var>year</var> <span title="convert
   a year for era">converted</span> for <var>era</var>.
+
+  <li>If <var>era year</var> is null, return nothing and abort these
+  steps.
 
   <li>Return a tuple of era <var>era</var> and year <var>era
   year</var>.

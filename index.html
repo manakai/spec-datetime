@@ -5,7 +5,7 @@
 </head><body><header>
 <hgroup>
 <h1 class="no-toc no-num">Dates and times</h1>
-<h2 class="no-toc no-num">The manakai project, 19 January 2016</h2>
+<h2 class="no-toc no-num">The manakai project, 23 January 2016</h2>
 
 
 <dl>
@@ -171,16 +171,42 @@ era-defs data file</a>
 </p><p>To <dfn id=convert-from-era-and-year title="convert from era and year">convert from
 era <var>era</var> and year <var>era year</var></dfn> into an <a href=#ad-year>AD
 year</a>, the implementation
-<em class=rfc2119>MUST</em> return <code><var>era</var>.offset</code>
-+ <var>era year</var>.
+<em class=rfc2119>MUST</em> run these steps:
 
-</p><p>To <dfn id=convert-a-year-for-era title="convert a year for era">convert</dfn> an <a href=#ad-year>AD
+  </p><ol class=steps>
+
+  <li>If <code><var>era</var>.offset</code> is null, return null.
+
+  </li><li>Otherwise, return <code><var>era</var>.offset</code> + <var>era
+  year</var>.
+
+  </li></ol>
+
+  <div class=note>
+  <p>If the mapping from <var>era</var> to AD is not known, these
+  steps return null.
+  </p></div>
+
+<p>To <dfn id=convert-a-year-for-era title="convert a year for era">convert</dfn> an <a href=#ad-year>AD
 year</a> <var>year</var> for era <var>era</var> into a
 year <var>era year</var> in <var>era</var>, the implementation
-<em class=rfc2119>MUST</em> return <var>year</var>
-− <code><var>era</var>.offset</code>.
+<em class=rfc2119>MUST</em> run these steps:
 
-</p><p>A string is an <dfn id=era-year-string>era year string</dfn> representing a
+  </p><ol class=steps>
+
+  <li>If <code><var>era</var>.offset</code> is null, return null.
+
+  </li><li>Otherwise, return <var>year</var>
+  − <code><var>era</var>.offset</code>.
+
+  </li></ol>
+
+  <div class=note>
+  <p>If the mapping from AD to <var>era</var> is not known, these
+  steps return null.
+  </p></div>
+
+<p>A string is an <dfn id=era-year-string>era year string</dfn> representing a
 year <var>year</var> in era <var>era</var>, if it consists of the
 following components in the given order:
 
@@ -290,6 +316,9 @@ implementation <em class=rfc2119>MUST</em> run these steps:
 
   </li><li>Let <var>era year</var> be <var>year</var> <a href=#convert-a-year-for-era title="convert
   a year for era">converted</a> for <var>era</var>.
+
+  </li><li>If <var>era year</var> is null, return nothing and abort these
+  steps.
 
   </li><li>Return a tuple of era <var>era</var> and year <var>era
   year</var>.
