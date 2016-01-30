@@ -149,6 +149,10 @@ name/value pair whose name is <var>prop</var> of the era description
 (a JSON object contained as a value of the <code>eras</code> value of
 the topmost object) in the <span>calendar-era-defs</span> data file.
 
+<p>The <dfn>era key</dfn> of an <span>era</span> <var>era</var> is
+<code><var>era</var>.key</code>.  An <span>era key</span> is a short
+string which uniquely identifies an <span>era</span>.
+
 <p>To <dfn title="convert from era and year">convert from
 era <var>era</var> and year <var>era year</var></dfn> into an <span>AD
 year</span>, the implementation
@@ -193,7 +197,7 @@ following components in the given order:
 
   <ol>
 
-  <li><code><var>era</var>.key</code>
+  <li>The <span>era key</span> of <var>era</var>
 
   <li>If <var>era year</var> is less than zero (0):
 
@@ -212,9 +216,8 @@ following components in the given order:
 
   </ol>
 
-... where <var>era key</var> is and <var>era year</var>
-is <var>year</var> <span title="convert a year for
-era">converted</span> for <var>era</var>.
+... where <var>era year</var> is <var>year</var> <span title="convert
+a year for era">converted</span> for <var>era</var>.
 
 <p>A string is an <dfn>era YMD string</dfn> of a tuple
 (<var>year</var>, <var>month</var>, <var>day</var>) with
@@ -509,7 +512,7 @@ values in the slots are encoded by <span>utf-8</span>.
 </section>
 
 <section>
-<h1 class=no-num>Data files</h1>
+<h1>Data file<!--s--></h1>
 
 <p>The
 <a href=https://github.com/manakai/data-locale/blob/master/data/calendar/era-defs.json><dfn>calendar-era-defs</dfn></a>

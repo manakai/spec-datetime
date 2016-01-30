@@ -46,7 +46,7 @@
    <li><a href=#julian-calendar><span class=secno>4.2 </span>Julian calendar</a></li>
    <li><a href=#kyuureki><span class=secno>4.3 </span>Kyuureki</a></li></ol></li>
  <li><a href=#file-format><span class=secno>5 </span>File format</a></li>
- <li><a class=no-num href=#data-files>Data files</a></li>
+ <li><a href=#data-file><span class=secno>6 </span>Data file<!--s--></a></li>
  <li><a class=no-num href=#author>Author</a></li></ol>
 <!--end-toc-->
 </section>
@@ -165,6 +165,10 @@ name/value pair whose name is <var>prop</var> of the era description
 (a JSON object contained as a value of the <code>eras</code> value of
 the topmost object) in the <a href=#calendar-era-defs>calendar-era-defs</a> data file.
 
+</p><p>The <dfn id=era-key>era key</dfn> of an <span>era</span> <var>era</var> is
+<code><var>era</var>.key</code>.  An <a href=#era-key>era key</a> is a short
+string which uniquely identifies an <span>era</span>.
+
 </p><p>To <dfn id=convert-from-era-and-year title="convert from era and year">convert from
 era <var>era</var> and year <var>era year</var></dfn> into an <a href=#ad-year>AD
 year</a>, the implementation
@@ -209,7 +213,7 @@ following components in the given order:
 
   </p><ol>
 
-  <li><code><var>era</var>.key</code>
+  <li>The <a href=#era-key>era key</a> of <var>era</var>
 
   </li><li>If <var>era year</var> is less than zero (0):
 
@@ -228,9 +232,8 @@ following components in the given order:
 
   </li></ol>
 
-... where <var>era key</var> is and <var>era year</var>
-is <var>year</var> <a href=#convert-a-year-for-era title="convert a year for
-era">converted</a> for <var>era</var>.
+... where <var>era year</var> is <var>year</var> <a href=#convert-a-year-for-era title="convert
+a year for era">converted</a> for <var>era</var>.
 
 <p>A string is an <dfn id=era-ymd-string>era YMD string</dfn> of a tuple
 (<var>year</var>, <var>month</var>, <var>day</var>) with
@@ -257,7 +260,7 @@ given order:
   </li></ol>
 
 <p>An <dfn id=era-name-context>era name context</dfn> is a mapping from strings
-to <span title="era key">era keys</span>, which is used to interpret
+to <a href=#era-key title="era key">era keys</a>, which is used to interpret
 era names in human-readable texts.
 
 </p><p><a href=#era-name-context title="era name context">Era name contexts</a> are defined
@@ -276,7 +279,7 @@ must run these steps:
   </li><li>Let <var>key</var> be the value of a name/value pair whose name
   is <var>name</var> in <var>context</var>.
 
-  </li><li>Return the <span>era</span> whose <span>era key</span>
+  </li><li>Return the <span>era</span> whose <a href=#era-key>era key</a>
   is <var>key</var>.
 
   </li></ol>
@@ -525,7 +528,7 @@ values in the slots are encoded by <a href=#utf-8>utf-8</a>.
 </p></section>
 
 <section>
-<h1 class=no-num id=data-files>Data files</h1>
+<h1 id=data-file><span class=secno>6 </span>Data file<!--s--></h1>
 
 <p>The
 <a href=https://github.com/manakai/data-locale/blob/master/data/calendar/era-defs.json><dfn id=calendar-era-defs>calendar-era-defs</dfn></a>
