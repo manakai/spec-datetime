@@ -5,7 +5,7 @@
 </head><body><header>
 <hgroup>
 <h1 class="no-toc no-num">Dates and times</h1>
-<h2 class="no-toc no-num">The manakai project, 23 January 2016</h2>
+<h2 class="no-toc no-num">The manakai project, 30 January 2016</h2>
 
 
 <dl>
@@ -163,10 +163,7 @@ the following components in the given order:
 where <var>era</var> is an era, represents that the value of the
 name/value pair whose name is <var>prop</var> of the era description
 (a JSON object contained as a value of the <code>eras</code> value of
-the topmost object) in
-<a href=https://github.com/manakai/data-locale/blob/master/data/calendar/era-defs.json>the
-era-defs data file</a>
-(<a href=https://github.com/manakai/data-locale/blob/master/doc/calendar-era-defs.txt>documentation</a>).
+the topmost object) in the <span>calendar-era-defs</span> data file.
 
 </p><p>To <dfn id=convert-from-era-and-year title="convert from era and year">convert from
 era <var>era</var> and year <var>era year</var></dfn> into an <a href=#ad-year>AD
@@ -258,6 +255,38 @@ given order:
   decimal
 
   </li></ol>
+
+<p>An <dfn id=era-name-context>era name context</dfn> is a mapping from strings
+to <span title="era key">era keys</span>, which is used to interpret
+era names in human-readable texts.
+
+</p><p><a href=#era-name-context title="era name context">Era name contexts</a> are defined
+in the <span>calendar-era-defs</span> data file as values of
+the <code>name_to_key</code> JSON object in the topmost object.
+
+</p><p>To <dfn id=get-an-era-from-name>get an era from name</dfn> <var>name</var> in
+<a href=#era-name-context>era name context</a> <var>context</var>, the implementation
+must run these steps:
+
+  </p><ol class=steps>
+
+  <li>If <var>name</var> is not a name in <var>context</var>, return
+  null and abort these steps.
+
+  </li><li>Let <var>key</var> be the value of a name/value pair whose name
+  is <var>name</var> in <var>context</var>.
+
+  </li><li>Return the <span>era</span> whose <span>era key</span>
+  is <var>key</var>.
+
+  </li></ol>
+
+<div class=note>
+
+<p>An <a href=#era-name-context>era name context</a> is required to interpret strings
+as eras as there are different eras sharing the same name.
+
+</p></div>
 
 </section>
 
@@ -498,19 +527,11 @@ values in the slots are encoded by <a href=#utf-8>utf-8</a>.
 <section>
 <h1 class=no-num id=data-files>Data files</h1>
 
-<p><i>This section is non-normative.</i>
-
-</p><p class=XXX>There are
-<a href=https://github.com/manakai/data-chars/blob/master/data/number-values.json>a
-JSON data file</a> on <span title=value>values</span> of characters
-defined in this document and
-<a href=https://github.com/manakai/data-chars/blob/master/data/tests/cjk-numbers.json>a
-JSON test data file</a> for the <span>parse a CJK number</span>
-algorithm
-(<a href=https://github.com/manakai/data-chars/blob/master/doc/number-values.txt>documentation</a>).
-
-</p><p class=XXX>There is an
-implementation: <a href=https://github.com/wakaba/perl-number-cjk>perl-number-cjk</a>.
+<p>The
+<a href=https://github.com/manakai/data-locale/blob/master/data/calendar/era-defs.json><dfn id=calendar-dra-defs>calendar-dra-defs</dfn></a>
+data file
+(<a href=https://github.com/manakai/data-locale/blob/master/doc/calendar-era-defs.txt>documentation</a>)
+is normatively referenced from this specification.
 
 </p></section>
 
