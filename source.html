@@ -116,6 +116,35 @@ components in the given order:
 
   </ol>
 
+<p>To <dfn>parse a year string</dfn> <var>string</var>, the
+implementation <em class=rfc2119>MUST</em> run these steps:
+
+  <ol class=steps>
+
+  <li>Let <var>input</var> be a copy of <var>string</var>.
+
+  <li>Let <var>sign</var> be 1.
+
+  <li>If the first character in <var>input</var> is
+  a <code>U+002B</code> <code class=charname>PLUS SIGN</code>
+  character (<code>+</code>), remove it from <var>input</var>.
+
+  <li>Otherwise, if the first character in <var>input</var> is
+  a <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>), remove it from <var>input</var>
+  and set <var>sign</var> to &minus;1.
+
+  <li>If <var>input</var> is <em>not</em> a string of one or
+  more <span>ASCII digits</span>, return <i>failure</i> and abort
+  these steps.
+
+  <li>Let <var>uyear</var> be the result of
+  interpreting <var>input</var> as a decimal integer.
+
+  <li>Let <var>year</var> be <var>sign</var> &#xD7; <var>uyear</var>.
+
+  </ol>
+
 <p>A string is a <dfn>YMD string</dfn> of a tuple
 (<var>year</var>, <var>month</var>, <var>day</var>) if it consists of
 the following components in the given order:
@@ -135,6 +164,52 @@ the following components in the given order:
 
   <li>Two <span>ASCII digits</span> representing <var>day</var> in
   decimal
+
+  </ol>
+
+<p>To <dfn>parse a YMD string</dfn> <var>string</var>, the
+implementation <em class=rfc2119>MUST</em> run these steps:
+
+  <ol class=steps>
+
+  <li>Let <var>input</var> be a copy of <var>string</var>.
+
+  <li>Let <var>sign</var> be 1.
+
+  <li>If the first character in <var>input</var> is
+  a <code>U+002B</code> <code class=charname>PLUS SIGN</code>
+  character (<code>+</code>), remove it from <var>input</var>.
+
+  <li>Otherwise, if the first character in <var>input</var> is
+  a <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>), remove it from <var>input</var>
+  and set <var>sign</var> to &minus;1.
+
+  <li>If <var>string</var> is <em>not</em> a string of one or
+  more <span>ASCII digits</span>, followed by
+  a <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>), followed by one or
+  more <span>ASCII digits</span>, followed by
+  a <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>), followed by one or
+  more <span>ASCII digits</span>, return
+  (<i>failure</i>, <i>failure</i>, <i>failure</i>) and abort these
+  steps.
+
+  <li>Let <var>uyear</var> be the result of interpreting the first
+  sequence of <span>ASCII digits</span> in <var>string</var> as a
+  decimal integer.
+
+  <li>Let <var>month</var> be the result of interpreting the second
+  sequence of <span>ASCII digits</span> in <var>string</var> as a
+  decimal integer.
+
+  <li>Let <var>day</var> be the result of interpreting the last
+  sequence of <span>ASCII digits</span> in <var>string</var> as a
+  decimal integer.
+
+  <li>Return (<var>sign</var>
+  &#xD7; <var>uyear</var>, <var>month</var>, <var>day</var>).
 
   </ol>
 
@@ -390,6 +465,41 @@ a <span>Gregorian calendar day</span>
 era <var>era</var> if it is an <span>era YMD string</span> of the
 tuple (<var>year</var>, <var>month</var>, <var>day</var>)
 in <var>era</var>.
+
+<p>To <dfn>get a Gregorian date from a year
+string</dfn> <var>string</var>, the implementation must run these
+steps:
+
+  <ol class=steps>
+
+  <li>Let <var>year</var> be the result of applying the steps
+  to <span>parse a year string</span> to <var>string</var>.
+
+  <li>If <var>year</var> is <i>failure</i>, return <i>failure</i> and
+  abort these steps.
+
+  <li>Otherwise, return <span>Gregorian calendar day</span>
+  (<var>year</var>, 1, 1).
+
+  </ol>
+
+<p>To <dfn>get a Gregorian date from a YMD
+string</dfn> <var>string</var>, the implementation must run these
+steps:
+
+  <ol class=steps>
+
+  <li>Let <var>year</var>, <var>month</var>, and <var>day</var> be the
+  result of applying the steps to <span>parse a YMD string</span>
+  to <var>string</var>.
+
+  <li>If <var>year</var> is <i>failure</i>, return <i>failure</i> and
+  abort these steps.
+
+  <li>Otherwise, return <span>Gregorian calendar day</span>
+  (<var>year</var>, <var>month</var>, <var>day</var>).
+
+  </ol>
 
 </section>
 

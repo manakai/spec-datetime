@@ -5,7 +5,7 @@
 </head><body><header>
 <hgroup>
 <h1 class="no-toc no-num">Dates and times</h1>
-<h2 class="no-toc no-num">The manakai project, 30 January 2016</h2>
+<h2 class="no-toc no-num">The manakai project, 6 February 2016</h2>
 
 
 <dl>
@@ -132,6 +132,35 @@ components in the given order:
 
   </li></ol>
 
+<p>To <dfn id=parse-a-year-string>parse a year string</dfn> <var>string</var>, the
+implementation <em class=rfc2119>MUST</em> run these steps:
+
+  </p><ol class=steps>
+
+  <li>Let <var>input</var> be a copy of <var>string</var>.
+
+  </li><li>Let <var>sign</var> be 1.
+
+  </li><li>If the first character in <var>input</var> is
+  a <code>U+002B</code> <code class=charname>PLUS SIGN</code>
+  character (<code>+</code>), remove it from <var>input</var>.
+
+  </li><li>Otherwise, if the first character in <var>input</var> is
+  a <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>), remove it from <var>input</var>
+  and set <var>sign</var> to −1.
+
+  </li><li>If <var>input</var> is <em>not</em> a string of one or
+  more <a href=#ascii-digits>ASCII digits</a>, return <i>failure</i> and abort
+  these steps.
+
+  </li><li>Let <var>uyear</var> be the result of
+  interpreting <var>input</var> as a decimal integer.
+
+  </li><li>Let <var>year</var> be <var>sign</var> × <var>uyear</var>.
+
+  </li></ol>
+
 <p>A string is a <dfn id=ymd-string>YMD string</dfn> of a tuple
 (<var>year</var>, <var>month</var>, <var>day</var>) if it consists of
 the following components in the given order:
@@ -151,6 +180,52 @@ the following components in the given order:
 
   </li><li>Two <a href=#ascii-digits>ASCII digits</a> representing <var>day</var> in
   decimal
+
+  </li></ol>
+
+<p>To <dfn id=parse-a-ymd-string>parse a YMD string</dfn> <var>string</var>, the
+implementation <em class=rfc2119>MUST</em> run these steps:
+
+  </p><ol class=steps>
+
+  <li>Let <var>input</var> be a copy of <var>string</var>.
+
+  </li><li>Let <var>sign</var> be 1.
+
+  </li><li>If the first character in <var>input</var> is
+  a <code>U+002B</code> <code class=charname>PLUS SIGN</code>
+  character (<code>+</code>), remove it from <var>input</var>.
+
+  </li><li>Otherwise, if the first character in <var>input</var> is
+  a <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>), remove it from <var>input</var>
+  and set <var>sign</var> to −1.
+
+  </li><li>If <var>string</var> is <em>not</em> a string of one or
+  more <a href=#ascii-digits>ASCII digits</a>, followed by
+  a <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>), followed by one or
+  more <a href=#ascii-digits>ASCII digits</a>, followed by
+  a <code>U+002D</code> <code class=charname>HYPHEN-MINUS
+  character</code> (<code>-</code>), followed by one or
+  more <a href=#ascii-digits>ASCII digits</a>, return
+  (<i>failure</i>, <i>failure</i>, <i>failure</i>) and abort these
+  steps.
+
+  </li><li>Let <var>uyear</var> be the result of interpreting the first
+  sequence of <a href=#ascii-digits>ASCII digits</a> in <var>string</var> as a
+  decimal integer.
+
+  </li><li>Let <var>month</var> be the result of interpreting the second
+  sequence of <a href=#ascii-digits>ASCII digits</a> in <var>string</var> as a
+  decimal integer.
+
+  </li><li>Let <var>day</var> be the result of interpreting the last
+  sequence of <a href=#ascii-digits>ASCII digits</a> in <var>string</var> as a
+  decimal integer.
+
+  </li><li>Return (<var>sign</var>
+  × <var>uyear</var>, <var>month</var>, <var>day</var>).
 
   </li></ol>
 
@@ -407,7 +482,42 @@ era <var>era</var> if it is an <a href=#era-ymd-string>era YMD string</a> of the
 tuple (<var>year</var>, <var>month</var>, <var>day</var>)
 in <var>era</var>.
 
-</p></section>
+</p><p>To <dfn id=get-a-gregorian-date-from-a-year-string>get a Gregorian date from a year
+string</dfn> <var>string</var>, the implementation must run these
+steps:
+
+  </p><ol class=steps>
+
+  <li>Let <var>year</var> be the result of applying the steps
+  to <a href=#parse-a-year-string>parse a year string</a> to <var>string</var>.
+
+  </li><li>If <var>year</var> is <i>failure</i>, return <i>failure</i> and
+  abort these steps.
+
+  </li><li>Otherwise, return <a href=#gregorian-calendar-day>Gregorian calendar day</a>
+  (<var>year</var>, 1, 1).
+
+  </li></ol>
+
+<p>To <dfn id=get-a-gregorian-date-from-a-ymd-string>get a Gregorian date from a YMD
+string</dfn> <var>string</var>, the implementation must run these
+steps:
+
+  </p><ol class=steps>
+
+  <li>Let <var>year</var>, <var>month</var>, and <var>day</var> be the
+  result of applying the steps to <a href=#parse-a-ymd-string>parse a YMD string</a>
+  to <var>string</var>.
+
+  </li><li>If <var>year</var> is <i>failure</i>, return <i>failure</i> and
+  abort these steps.
+
+  </li><li>Otherwise, return <a href=#gregorian-calendar-day>Gregorian calendar day</a>
+  (<var>year</var>, <var>month</var>, <var>day</var>).
+
+  </li></ol>
+
+</section>
 
 <section>
 <h1 id=julian-calendar><span class=secno>4.2 </span>Julian calendar</h1>
