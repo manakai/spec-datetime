@@ -92,10 +92,16 @@ Standard</cite></a>.
 <section>
 <h1 id=numbers-of-days><span class=secno>2 </span>Numbers of days</h1>
 
-<p>The <dfn id=jd-day-number>JD day number</dfn> of a day is a <span>Julian Day</span>
-number representing the start of the day in UTC.
+<p>The <dfn id=jd-day-number>JD day number</dfn> of a <span>day</span> is
+a <span>Julian Day</span> number representing the start of
+the <span>day</span> in <span>UTC</span>.
 
-</p></section>
+</p><div class="note memo">
+<p>Unlike the <span>Julian Day Number</span> (<span>JDN</span>),
+the <a href=#jd-day-number>JD day number</a> is not an integer.
+</p></div>
+
+</section>
 
 <section>
 <h1 id=eras><span class=secno>3 </span>Eras</h1>
@@ -453,10 +459,16 @@ day</a>, or <a href=#kyuureki-day>kyuureki day</a>.
 </p><section>
 <h1 id=gregorian-calendar><span class=secno>4.1 </span>Gregorian calendar</h1>
 
-<p>A <dfn id=gregorian-calendar-day>Gregorian calendar day</dfn> is identified by a tuple of
-an <a href=#ad-year>AD year</a>, a month number, and a day number.  The year
-number is an integer.  The month number is an integer in the range [1,
-12].  The day number is an integer in the range [1, 31].
+<p>For the purpose of this specification, the <dfn id=gregorian-calendar-0>Gregorian
+calendar</dfn> refers to the
+<a href=https://html.spec.whatwg.org/#proleptic-gregorian-calendar>proleptic
+Gregorian calendar</a>.
+
+</p><p>A <dfn id=gregorian-calendar-day>Gregorian calendar day</dfn> represents a <span>day</span>
+in the <a href=#gregorian-calendar-0>Gregorian calendar</a>.  It is identified by a tuple
+of an <a href=#ad-year>AD year</a>, a month number, and a day number.  The
+year number is an integer.  The month number is an integer in the
+range [1, 12].  The day number is an integer in the range [1, 31].
 
 </p><div class=note>
 <p>Not all months have the days 29, 30, and 31.
@@ -522,7 +534,11 @@ steps:
 <section>
 <h1 id=julian-calendar><span class=secno>4.2 </span>Julian calendar</h1>
 
-<p>A <dfn id=julian-calendar-day>Julian calendar day</dfn> is identified by a tuple of
+<p>For the purpose of this specification, the <dfn id=julian-calendar-0>Julian
+calendar</dfn> refers to the <span>proleptic Julian calendar</span>.
+
+</p><p>A <dfn id=julian-calendar-day>Julian calendar day</dfn> represents a <span>day</span> in
+the <a href=#julian-calendar-0>Julian calendar</a>.  It is identified by a tuple of
 an <a href=#ad-year>AD year</a>, a month number, and a day number.  The year
 number is an integer.  The month number is an integer in the range [1,
 12].  The day number is an integer in the range [1, 31].
@@ -554,7 +570,24 @@ in <var>era</var>.
 <section>
 <h1 id=kyuureki><span class=secno>4.3 </span>Kyuureki</h1>
 
-<p>A <dfn id=kyuureki-day>kyuureki day</dfn> is identified by a tuple of an <a href=#ad-year>AD
+<p>The <dfn id=kyuureki-0>kyuureki</dfn> (<dfn id=旧暦 lang=ja>旧暦</dfn>) is the calendar
+system historically used in Japan.  It is a variant of Chinese
+calendar systems.
+
+</p><div class="note memo">
+<p>It is normatively defined by <cite>太陽暦</cite> (Government of
+Japan, 1873-1879),
+<cite>暦</cite> (Government of Japan, 1880-1909),
+<cite>日本百科大辭典</cite> (keyword "太陰暦", 平山清次, 1912), 
+<cite>神宮暦</cite> (神宮司廳, 1947-), <cite>日本暦日原典</cite> (内田正男,
+1992), <cite>日本書紀暦日原典</cite> (内田正男, 1993).
+</p><p>See also
+<a href=https://wiki.suikawiki.org/n/%E6%97%A7%E6%9A%A6>SuikaWiki:旧
+暦</a>.
+</p></div>
+
+<p>A <dfn id=kyuureki-day>kyuureki day</dfn> represents a <span>day</span> in
+the <a href=#kyuureki-0>kyuureki</a>.  It is identified by a tuple of an <a href=#ad-year>AD
 year</a>, a month number, a boolean flag, and a day number.  The
 year number is an integer.  The month number is an integer in the
 range [1, 12], where the value 1 represents the 正月.  If the boolean

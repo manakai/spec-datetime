@@ -236,7 +236,7 @@ var {
   font-style: italic;
 }
 
-.note var {
+.note var, .note cite {
   font-style: normal;
 }
 
