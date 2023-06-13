@@ -5,7 +5,7 @@
 </head><body><header>
 <hgroup>
 <h1 class="no-toc no-num">Dates and times</h1>
-<h2 class="no-toc no-num">The manakai project, 5 August 2018</h2>
+<h2 class="no-toc no-num">The manakai project, 13 June 2023</h2>
 
 
 <dl>
@@ -47,6 +47,8 @@
    <li><a href=#kyuureki><span class=secno>4.3 </span>Kyuureki</a></li></ol></li>
  <li><a href=#file-format><span class=secno>5 </span>File format</a></li>
  <li><a href=#data-file><span class=secno>6 </span>Data file<!--s--></a></li>
+ <li><a href=#times><span class=secno>7 </span>Times</a></li>
+ <li><a href=#test-data><span class=secno>8 </span>Test data</a></li>
  <li><a class=no-num href=#author>Author</a></li></ol>
 <!--end-toc-->
 </section>
@@ -437,7 +439,7 @@ If no <span>era</span> is defined by
 
 <p>For the purpose of this specification, a <dfn id=calendar-day>calendar day</dfn> is
 a <a href=#gregorian-calendar-day>Gregorian calendar day</a>, <a href=#julian-calendar-day>Julian calendar
-day</a>, or <a href=#kyuureki-day>kyuureki day</a>.
+day</a>, or <a href=#kyuureki-day>Kyuureki day</a>.
 
 </p><section>
 <h1 id=gregorian-calendar><span class=secno>4.1 </span>Gregorian calendar</h1>
@@ -553,7 +555,7 @@ in <var>era</var>.
 <section>
 <h1 id=kyuureki><span class=secno>4.3 </span>Kyuureki</h1>
 
-<p>The <dfn id=kyuureki-0>kyuureki</dfn> (<dfn id=旧暦 lang=ja>旧暦</dfn>) is the calendar
+<p>The <dfn id=kyuureki-0>Kyuureki</dfn> (<dfn id=旧暦 lang=ja>旧暦</dfn>) is the calendar
 system historically used in Japan.  It is a variant of Chinese
 calendar systems.
 
@@ -568,8 +570,8 @@ Japan, 1873-1879),
 <a href=https://wiki.suikawiki.org/n/%E6%97%A7%E6%9A%A6>SuikaWiki:旧暦</a>.
 </p></div>
 
-<p>A <dfn id=kyuureki-day>kyuureki day</dfn> represents a <span>day</span> in
-the <a href=#kyuureki-0>kyuureki</a>.  It is identified by a tuple of an <a href=#ad-year>AD
+<p>A <dfn id=kyuureki-day>Kyuureki day</dfn> represents a <span>day</span> in
+the <a href=#kyuureki-0>Kyuureki</a>.  It is identified by a tuple of an <a href=#ad-year>AD
 year</a>, a month number, a boolean flag, and a day number.  The
 year number is an integer.  The month number is an integer in the
 range [1, 12], where the value 1 represents the 正月.  If the boolean
@@ -581,7 +583,7 @@ where the value 1 represents the 朔日 of the month.
 <p>Not all months have the day 30.
 </p></div>
 
-<p>A string is a <dfn id=kyuureki-date-string>kyuureki date string</dfn> of a <a href=#kyuureki-day>kyuureki
+<p>A string is a <dfn id=kyuureki-date-string>Kyuureki date string</dfn> of a <a href=#kyuureki-day>Kyuureki
 day</a> (<var>year</var>, <var>month</var>, <var>is leap
 month</var>, <var>day</var>) if it consists of the following
 components in the given order:
@@ -608,8 +610,8 @@ components in the given order:
 
   </li></ol>
 
-<p>A string is a <dfn id=kyuureki-era-date-string>kyuureki era date string</dfn> of
-a <a href=#kyuureki-day>kyuureki day</a>
+<p>A string is a <dfn id=kyuureki-era-date-string>Kyuureki era date string</dfn> of
+a <a href=#kyuureki-day>Kyuureki day</a>
 (<var>year</var>, <var>month</var>, <var>is leap
 month</var>, <var>day</var>) with era <var>era</var> if it consists of
 the following components in the given order:
@@ -660,6 +662,69 @@ values in the slots are encoded by <a href=#utf-8>utf-8</a>.
 data file
 (<a href=https://github.com/manakai/data-locale/blob/master/doc/calendar-era-defs.txt>documentation</a>)
 is normatively referenced from this specification.
+
+</p></section>
+
+<section>
+<h1 id=times><span class=secno>7 </span>Times</h1>
+
+<p>To <dfn id=resolve-a-day-of-time>resolve a
+day-of-time</dfn> <a href=#time-of-day>time-of-day</a> <var>daytime</var> relative
+to a <a href=#time-with-time-zone-offset>time with time-zone offset</a> <var>reference
+time</var>, run these steps:
+
+  </p><ol class=steps>
+
+  <li>Let <var>time2</var> be a new <a href=#time-with-time-zone-offset>time with time-zone offset</a>
+  with
+  <var>reference time</var>'s <span title="reference time year">year</span>,
+  <var>reference time</var>'s <span title="reference time month">month</span>,
+  <var>reference time</var>'s <span title="reference time day">day</span>,
+  <var>daytime</var>'s <span title="time-of-day hour">hour</span>,
+  <var>daytime</var>'s <span title="time-of-day minute">minute</span>,
+  <var>daytime</var>'s <span title="time-of-day second">second</span>, and
+  <var>reference time</var>'s <span title="reference time time zone offset">time-zone offset</span>.
+
+  </li><li>Let <var>time1</var> be <var>time2</var> - 24 × 60 × 60 seconds.
+  
+  </li><li>Let <var>time3</var> be <var>time2</var> + 24 × 60 × 60 seconds.
+
+  </li><li>Let <var>delta1</var> be |<var>reference time</var> - <var>time1</var>|.
+
+  </li><li>Let <var>delta2</var> be |<var>reference time</var> - <var>time2</var>|.
+
+  </li><li>Let <var>delta3</var> be |<var>reference time</var> - <var>time3</var>|.
+
+  </li><li>Let <var>minimum delta</var> be the minimum value
+  of <var>delta1</var>, <var>delta2</var>, and <var>delta3</var>.
+
+  </li><li>If <var>delta1</var> is <var>minimum delta</var>,
+  return <var>time1</var>.
+
+  </li><li>Otherwise, if <var>delta2</var> is <var>minimum delta</var>,
+  return <var>time2</var>.
+
+  </li><li>Otherwise, if <var>delta3</var> is <var>minimum delta</var>,
+  return <var>time3</var>.
+    
+  </li></ol>
+
+  <p class=note>These steps return the time represented
+  by <var>daytime</var> that is nearest to <var>reference time</var>.
+  
+  </p><p class=XXX>
+    Need to define <dfn id=time-with-time-zone-offset>time with time-zone
+    offset</dfn>, <dfn id=time-of-day>time-of-day</dfn>, and time computations.
+
+</p></section>
+
+<section>
+<h1 id=test-data><span class=secno>8 </span>Test data</h1>
+
+<p><em>This section is non-normative.</em>
+
+</p><p>There are <a href=https://github.com/manakai/tests-datetime>tests
+for some parts of this specification</a>.
 
 </p></section>
 
